@@ -1,0 +1,100 @@
+body {
+  background: linear-gradient(135deg, #f9f9ff, #eaf3ff);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+  font-weight: 700;
+  color: #3f3f3f;
+}
+
+.upload-section {
+  border: 2px dashed #5c5c63;
+  border-radius: 20px;
+  padding: 40px 30px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.upload-icon {
+  font-size: 60px;
+  color: #3f3d61;
+  margin-bottom: 20px;
+}
+
+.scroll-box {
+  max-height: 600px;
+  overflow: auto;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+#btnGroup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.btn-custom {
+  border-radius: 50px;
+  font-weight: 600;
+  padding: 10px 24px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-upload {
+  background: linear-gradient(135deg, #959dbd, #777d97);
+  color: #fff;
+  border: none;
+  transition: 0.3s ease;
+}
+
+.btn-upload:hover {
+  background: linear-gradient(135deg, #476ee0, #2b4bd0);
+  box-shadow: 0 0 10px rgba(70, 90, 255, 0.3);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+table th {
+  background-color: #f1f5ff;
+  color: #333;
+  font-weight: 600;
+}
+
+table td {
+  background-color: #fff;
+}
+
+.form-control {
+  border-radius: 10px;
+}
+
+@media (max-width: 576px) {
+  #btnGroup {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
