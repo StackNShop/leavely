@@ -6,10 +6,6 @@
             uploadedFile = e.target.files[0];
         });
 
-        function isDateColumn(header) {
-            return header.toString().toLowerCase().includes("date");
-        }
-
         document.getElementById("showDataBtn").addEventListener("click", function () {
             if (!uploadedFile) return alert("Please choose a file first.");
 
@@ -32,18 +28,8 @@
 
                 rows.forEach((row) => {
                     html += "<tr>";
-                    headers.forEach((header, i) => {
-                        let cell = row[i] || "";
-                        if (isDateColumn(header) && typeof cell === "number") {
-                            const jsDate = XLSX.SSF.parse_date_code(cell);
-                            if (jsDate) {
-                                const day = String(jsDate.d).padStart(2, '0');
-                                const month = String(jsDate.m).padStart(2, '0');
-                                const year = jsDate.y;
-                                cell = `${day}-${month}-${year}`;
-                            }
-                        }
-                        html += `<td>${cell}</td>`;
+                    headers.forEach((_, i) => {
+                        html += `<td>${row[i] || ""}</td>`;
                     });
                     html += "</tr>";
                 });
@@ -55,9 +41,10 @@
                 document.getElementById("tableBox").classList.remove("d-none");
 
                 const actionBtn = document.getElementById("actionBtn");
-                actionBtn.textContent = "Perform Operation";
-                actionBtn.className = "btn btn-primary btn-custom";
+                actionBtn.innerHTML = `<i class="fas fa-cogs fa-spin text-light"></i> Perform Operation`;
+                actionBtn.className = "btn btn-info btn-custom text-white";
                 actionBtn.onclick = performOperation;
+
             };
             reader.readAsArrayBuffer(uploadedFile);
         });
@@ -107,28 +94,35 @@
             });
 
             window.originalLeaveResult = result;
+
             let html = `
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h5>All Leave Entries (Unfiltered)</h5>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-filter"></i> Filter Leave Types
-                        </button>
-                        <ul class="dropdown-menu p-3" style="width: 250px;" id="leaveFilterList">
-                            ${["DP", "OD", "WO", "WOP", "CL", "ABS", "ABS/DP", "CL/DP", "DP/ABS", "ML"].map(type => `
-                                <li class="form-check">
-                                    <input class="form-check-input leave-filter-checkbox" type="checkbox" value="${type}" id="filter_${type}">
-                                    <label class="form-check-label" for="filter_${type}">${type}</label>
-                                </li>
-                            `).join('')}
-                            <li class="mt-2 text-end">
-                                <button class="btn btn-sm btn-primary" onclick="applyLeaveFilter()">Apply Filter</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="leaveTableBox"></div>
-            `;
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5>All Leave Entries (Unfiltered)</h5>
+          <div class="dropdown">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-filter"></i> Filter
+            </button>
+            <div class="dropdown-menu p-3" style="width: 260px;">
+              <div id="leaveFilterList" class="mb-2">
+                // ********************************************************************************
+                // ADD Filter option if you have 
+                // ********************************************************************************
+                ${["DP", "WO", "WOP", "CL", "ABS", "ABS/DP", "CL/DP", "DP/ABS"]
+                    .map(
+                        (type) => `
+                  <div class="form-check">
+                    <input class="form-check-input leave-filter-checkbox" type="checkbox" value="${type}" id="filter_${type}">
+                    <label class="form-check-label" for="filter_${type}">${type}</label>
+                  </div>`
+                    )
+                    .join("")}
+              </div>
+              <button class="btn btn-sm btn-primary w-100" onclick="applyLeaveFilter()">Apply Filters</button>
+            </div>
+          </div>
+        </div>
+        <div id="leaveTableBox"></div>
+      `;
 
             document.getElementById("resultContent").innerHTML = html;
             document.getElementById("resultContent").classList.remove("d-none");
@@ -144,27 +138,35 @@
 
         function applyLeaveFilter() {
             const checkboxes = document.querySelectorAll(".leave-filter-checkbox");
-            const excluded = new Set();
-            checkboxes.forEach(cb => {
-                if (cb.checked) excluded.add(cb.value.trim().toUpperCase());
+            const included = new Set();
+            checkboxes.forEach((cb) => {
+                if (cb.checked) included.add(cb.value.trim().toUpperCase());
             });
 
-            const filtered = [window.originalLeaveResult[0]];
-            window.originalLeaveResult.slice(1).forEach(row => {
-                const leaveType = row[1].toString().trim().toUpperCase();
-                if (!excluded.has(leaveType)) {
-                    filtered.push(row);
-                }
-            });
+            const allResults = window.originalLeaveResult || [];
+            const headers = allResults[0];
+            const dataRows = allResults.slice(1);
+            const filtered = [headers];
+
+            if (included.size === 0) {
+                filtered.push(...dataRows);
+            } else {
+                dataRows.forEach((row) => {
+                    const leaveType = row[1].toString().trim().toUpperCase();
+                    if (included.has(leaveType)) {
+                        filtered.push(row);
+                    }
+                });
+            }
 
             lastFilteredResult = filtered;
 
             let html = "";
             if (filtered.length === 1) {
-                html = "<div class='alert alert-warning'>No results after applying filter.</div>";
+                html = "<div class='alert alert-warning'>No matching leave types selected.</div>";
             } else {
                 html += "<table class='table table-bordered table-striped table-hover table-sm'><thead><tr>";
-                filtered[0].forEach((h) => (html += `<th>${h}</th>`));
+                headers.forEach((h) => (html += `<th>${h}</th>`));
                 html += "</tr></thead><tbody>";
                 filtered.slice(1).forEach((r) => {
                     html += "<tr>";
@@ -184,3 +186,9 @@
             XLSX.utils.book_append_sheet(wb, ws, "Filtered Leaves");
             XLSX.writeFile(wb, "Filtered_Leave_Report.xlsx");
         }
+        // Set current month and year on page load
+        window.addEventListener("DOMContentLoaded", () => {
+            const now = new Date();
+            document.getElementById("month").value = now.getMonth() + 1;
+            document.getElementById("year").value = now.getFullYear();
+        });
