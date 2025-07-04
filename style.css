@@ -1,6 +1,15 @@
  body {
-            background: linear-gradient(135deg, #f9f9ff, #eaf3ff);
+            background: linear-gradient(135deg, #ffffff, #ffffff);
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sub-heading {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #6c757d;
+            margin-top: -10px;
+            margin-bottom: 30px;
         }
 
         h2 {
@@ -9,7 +18,7 @@
         }
 
         .upload-section {
-            border: 2px dashed #5c5c63;
+            border: 2px dashed #288683;
             border-radius: 20px;
             padding: 40px 30px;
             text-align: center;
@@ -19,7 +28,7 @@
 
         .upload-icon {
             font-size: 60px;
-            color: #3f3d61;
+            color: #288683;
             margin-bottom: 20px;
         }
 
@@ -52,30 +61,27 @@
         }
 
         .btn-upload {
-            background: linear-gradient(135deg, #959dbd, #777d97);
-            color: #fff;
+            background: linear-gradient(135deg, #459693, #87d1cf);
+            color: #000;
             border: none;
             transition: 0.3s ease;
         }
 
         .btn-upload:hover {
-            background: linear-gradient(135deg, #476ee0, #2b4bd0);
+            background: linear-gradient(135deg, #87d1cf, #2e615f);
             box-shadow: 0 0 10px rgba(70, 90, 255, 0.3);
         }
 
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
+        .btn-operate {
+            background: linear-gradient(135deg, #0096c7, #2e615f);
+            color: #fff;
+            border: none;
+            transition: all 0.3s ease-in-out;
         }
 
-        .btn-success {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-
-        table {
-            border-radius: 10px;
-            overflow: hidden;
+        .btn-operate:hover {
+            background: linear-gradient(135deg, #0096c7, #2e615f);
+            box-shadow: 0 0 12px rgba(0, 180, 216, 0.4);
         }
 
         table th {
@@ -84,17 +90,21 @@
             font-weight: 600;
         }
 
-        table td {
-            background-color: #fff;
-        }
-
         .form-control {
             border-radius: 10px;
         }
 
-        @media (max-width: 576px) {
-            #btnGroup {
-                flex-direction: column;
-                gap: 10px;
+        @media (max-width: 768px) {
+            .upload-icon {
+                font-size: 48px;
+            }
+
+            .btn-custom {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .scroll-box {
+                padding: 15px;
             }
         }
