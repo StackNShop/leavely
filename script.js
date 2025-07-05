@@ -103,10 +103,7 @@
               <i class="fas fa-filter"></i> Filter
             </button>
             <div class="dropdown-menu p-3" style="width: 260px;">
-              <div id="leaveFilterList" class="mb-2">
-                // ********************************************************************************
-                // ADD Filter option if you have 
-                // ********************************************************************************
+              <div id="leaveFilterList" class="mb-2">            
                 ${["DP", "WO", "WOP", "CL", "ABS", "ABS/DP", "CL/DP", "DP/ABS"]
                     .map(
                         (type) => `
